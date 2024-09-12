@@ -1,0 +1,78 @@
+class Deque {
+    constructor() {
+        this.items = [];
+    }
+
+    // Add an element to the front of the deque
+    enqueueFront(element) {
+        this.items.unshift(element); // Use unshift to add element to the front
+    }
+
+    // Add an element to the back of the deque
+    enqueueBack(element) {
+        this.items.push(element); // Use push to add element to the back
+    }
+
+    // Remove and return the front element of the deque
+    dequeueFront() {
+        if (this.isEmpty()) {
+            throw new Error("Deque is empty");
+        }
+        return this.items.shift(); // Use shift to remove element from the front
+    }
+
+    // Remove and return the back element of the deque
+    dequeueBack() {
+        if (this.isEmpty()) {
+            throw new Error("Deque is empty");
+        }
+        return this.items.pop(); // Use pop to remove element from the back
+    }
+
+    // Return the front element without removing it
+    peekFront() {
+        if (this.isEmpty()) {
+            throw new Error("Deque is empty");
+        }
+        return this.items[0]; // The first element
+    }
+
+    // Return the back element without removing it
+    peekBack() {
+        if (this.isEmpty()) {
+            throw new Error("Deque is empty");
+        }
+        return this.items[this.items.length - 1]; // The last element
+    }
+
+    // Check if the deque is empty
+    isEmpty() {
+        return this.items.length === 0;
+    }
+
+    // Return the size of the deque
+    size() {
+        return this.items.length;
+    }
+
+    // Print the deque
+    print() {
+        console.log(this.items.toString());
+    }
+}
+
+// Usage Example
+const deque = new Deque();
+deque.enqueueBack(1);
+deque.enqueueBack(2);
+deque.enqueueFront(0);
+deque.print(); // Output: 0,1,2
+
+console.log(deque.dequeueFront()); // Output: 0
+console.log(deque.dequeueBack());  // Output: 2
+deque.print(); // Output: 1
+
+console.log(deque.peekFront()); // Output: 1
+deque.enqueueBack(3);
+deque.enqueueFront(-1);
+deque.print(); // Output: -1,1,Int32Array
