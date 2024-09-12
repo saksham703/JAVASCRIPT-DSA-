@@ -1,0 +1,47 @@
+class Stack {
+    constructor(...elements) {
+        this.items = elements;  // Initialize stack with provided elements
+        // u can also use this.items = [];
+    }
+
+    // Add an item to the stack
+    push(element) {
+        this.items.push(element);
+    }
+
+    // Remove and return the top item of the stack
+    pop() {
+        if (this.isEmpty()) {
+            throw new Error("Stack is empty");
+        }
+        return this.items.pop();
+    }
+
+    // Return the top item without removing it
+    peek() {
+        if (this.isEmpty()) {
+            throw new Error("Stack is empty");
+        }
+        return this.items[this.items.length - 1];
+    }
+
+    // Check if the stack is empty
+    isEmpty() {
+        return this.items.length === 0;
+    }
+
+    // Return the size of the stack
+    size() {
+        return this.items.length;
+    }
+
+    // Print the stack
+    print() {
+        console.log(this.items.toString());
+    }
+}
+
+// Usage with no arguments
+let stack = new Stack();
+stack.print(); // Output: (empty string, because items is an empty array)
+console.log(stack.isEmpty()); // Output: true
