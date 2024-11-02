@@ -1,0 +1,32 @@
+/**
+ * @param {number[]} nums
+ * @param {number} k
+ * @return {number}
+ */
+
+// window represents  -> max length containing 1's and k 0's. we can have max k 0's in a window . when our no of zeros in window exceeds k then we reduce the number of 0's in 🪟 by moving leftwards. Initially we will try to make a max length  window with k 0's.
+// TC:- There are two pointers traversing the whole array, so in the worst case both the pointer can reach the end of the array thus the time complexity will be O(N+N) = O(2*N)  = O(N). SC:- O(1).
+
+var longestOnes = function(nums, k) {
+    let r = 0;
+    let l = 0;
+    let count0 = 0;
+    let maxLen = 0;
+    
+    for(r=0; r< nums.length; r++) {
+        if(nums[r] == 0) count0++;
+        
+        while(count0 > k) {
+            if(nums[l] == 0) {
+                count0--;
+            }
+            l++;
+        }
+            
+            
+     maxLen = Math.max(maxLen, r-l+1);
+    }
+     
+    return maxLen;
+    
+};
