@@ -1,0 +1,25 @@
+var totalFruit = function(fruits) {
+    let left = 0;
+    let maxSum = 0;
+    
+    let map = new Map();
+    
+    for (let right = 0; right < fruits.length; right++) {
+        // Add the current fruit at `right` to the map
+        map.set(fruits[right], (map.get(fruits[right]) || 0) + 1);
+        
+        // Shrink the window from the left if we have more than 2 types of fruits
+        while (map.size > 2) {
+            map.set(fruits[left], map.get(fruits[left]) - 1);
+            if (map.get(fruits[left]) === 0) {
+                map.delete(fruits[left]);
+            }
+            left++;
+        }
+        
+        // Calculate the max window size after ensuring we have at most 2 types of fruits
+        maxSum = Math.max(maxSum, right - left + 1);
+    }
+    
+    return maxSum;
+};
