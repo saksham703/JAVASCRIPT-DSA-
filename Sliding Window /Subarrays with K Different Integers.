@@ -1,0 +1,33 @@
+//Subarrays with exact K Different Integers = Subarrays having <= K different integers - Subarrays having <= (K-1) different integers
+
+
+var subarraysWithKDistinct = function(nums, k) {
+    
+   return  helper(nums,k) - helper(nums,k-1);
+    
+}
+
+
+    
+    function helper(nums, k) {
+    
+    let count = 0, left = 0, right = 0;
+    let map = new Map();
+    
+    while(right < nums.length){
+        map.set(nums[right], (map.get(nums[right]) | 0 ) + 1);  
+
+    
+    
+    while(map.size > k) {
+        map.set(nums[left], map.get(nums[left]) - 1);
+        
+        if(map.get(nums[left]) == 0) map.delete(nums[left]);
+      
+        left++;
+    }
+    count += right - left + 1;
+    right++;
+    }
+    return count;
+};
