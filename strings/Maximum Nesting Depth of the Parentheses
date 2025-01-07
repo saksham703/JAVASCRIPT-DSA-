@@ -1,0 +1,50 @@
+// With Stack : SC: O(N)
+
+
+/**
+ * @param {string} s
+ * @return {number}
+ */
+var maxDepth = function(s) {
+    let st = [];
+    let count = 0;
+    
+    for(let i=0; i< s.length; i++) {
+        if(s[i] == '(') { 
+            st.push('(');
+            count = Math.max(count,st.length);
+        }
+        else if(s[i] == ')' ) {
+            st.pop('(');
+        }
+    }
+    
+    if(st.length !== 0) return -1;
+    else return count;
+};
+
+
+// with count & maxCount variables : SC: O(1)
+
+/**
+ * @param {string} s
+ * @return {number}
+ */
+var maxDepth = function(s) {
+    let st = [];
+    let count = 0;
+    let maxCount = 0;
+    
+    for(let i=0; i< s.length; i++) {
+        if(s[i] == '(') { 
+            count++;
+            maxCount = Math.max(count,maxCount);
+        }
+        else if(s[i] == ')' ) {
+            count--;
+        }
+    }
+    
+    if(st.length !== 0) return -1;
+    else return maxCount;
+};
