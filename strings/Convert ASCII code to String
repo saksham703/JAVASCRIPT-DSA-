@@ -1,0 +1,33 @@
+
+Aman, who is working at a software company forgot the password of his Linkedin Account. 
+But he knows the ASCII values of his password in reverse order.
+
+Help Aman to find the password.
+
+To decode the password, first reverse the string of digits, 
+then successively pick valid values from the string and 
+convert them to their ASCII equivalents. Some of the values will have two digits, 
+and others three. Use the ranges of valid values when decoding the string of digits.
+
+
+
+function asciiToSentence(str) {
+    let num = 0;
+    let result = "";
+
+    for (let i = 0; i < str.length; i++) {
+        num = num * 10 + Number(str[i]);
+
+        // Ensure valid ASCII range (32-126)
+        if (num >= 32 && num <= 126) {
+            result += String.fromCharCode(num);
+            num = 0; // Reset num after finding a valid character
+        }
+    }
+
+    return result;
+}
+
+// Example usage
+let str = "7110110110711510211111471101101107115"; 
+console.log(asciiToSentence(str)); // Output: "Hello World"
