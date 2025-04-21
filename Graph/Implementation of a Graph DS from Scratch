@@ -1,0 +1,63 @@
+// Online Javascript Editor for free
+// Write, Edit and Run your Javascript code using JS Online Compiler
+
+class Graph {
+    constructor() {
+        this.adjacencyList = [];
+    }
+
+
+    addEdge(vertex1, vertex2) {
+   if (!this.adjacencyList[vertex1]) {
+            this.adjacencyList[vertex1] = [];
+        }
+
+if (!this.adjacencyList[vertex2]) {
+            this.adjacencyList[vertex2] = [];
+        }
+
+        this.adjacencyList[vertex1].push(vertex2);
+        this.adjacencyList[vertex2].push(vertex1); // For undirected graph
+    }
+    
+    
+    getLength(){
+      return this.adjacencyList.length;
+    }
+    
+
+    dfs(start,visited) {
+      console.log('adj list ', this.adjacencyList)
+        const result = [];
+console.log(visited); 
+        const dfsHelper = (vertex) => {
+            visited[vertex] = 1;
+            result.push(vertex);
+
+            this.adjacencyList[vertex].forEach(neighbor => {
+                if (visited[neighbor] == 0 ) {
+                    dfsHelper(neighbor);
+                }
+            });
+        };
+
+        dfsHelper(start);
+        return result;
+    }
+}
+
+// Example usage:
+const graph = new Graph();
+graph.addEdge(0,1);
+graph.addEdge(1,2);
+graph.addEdge(2,3);
+graph.addEdge(3,4);
+graph.addEdge(4,5);
+graph.addEdge(5,6);
+let n = graph.getLength();
+console.log("graph len", n);
+const visited = new Array(n);
+visited.fill(0);
+console.log(visited);
+const dfsResult = graph.dfs(0,visited);
+console.log('the result is' , dfsResult); 
