@@ -1,6 +1,8 @@
 // Online Javascript Editor for free
 // Write, Edit and Run your Javascript code using JS Online Compiler
 
+// There should be a graph class , you should be able to add an edge (u,v), you should be able to get length of the DS.
+
 class Graph {
     constructor() {
         this.adjacencyList = [];
