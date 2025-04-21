@@ -1,0 +1,22 @@
+function bfsMatrix(matrix, start) {
+    const result = [];
+    const n = matrix.length;
+    const visited = new Array(n).fill(false);
+    const queue = [];
+    queue.push(start);
+    visited[start] = true;
+
+    while (queue.length > 0) {
+        const node = queue.shift();
+        result.push(node);
+
+        for (let neighbor = 0; neighbor < n; neighbor++) {
+            if (matrix[node][neighbor] === 1 && !visited[neighbor]) {
+                visited[neighbor] = true;
+                queue.push(neighbor);
+            }
+        }
+    }
+
+    return result;
+}
