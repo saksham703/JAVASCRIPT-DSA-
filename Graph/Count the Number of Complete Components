@@ -1,0 +1,101 @@
+type Graph = number[][];
+let graph: Graph;
+let visited: boolean[];
+
+// Builds the undirected graph from the edges
+const buildGraph = (n: number, edges: number[][]): void => {
+  graph = Array.from({ length: n }, () => []);
+  visited = new Array(n).fill(false);
+
+  edges.forEach(edge => {
+    const [a, b] = edge;
+    graph[a].push(b);
+    graph[b].push(a);
+  });
+};
+
+// Defines a Depth-First Search (DFS) function to explore the graph
+const depthFirstSearch = (node: number): [number, number] => {
+  visited[node] = true;
+  let verticesCount = 1;
+  let edgesCount = graph[node].length;
+
+  graph[node].forEach(neighbor => {
+    if (!visited[neighbor]) {
+      const [subtreeVertices, subtreeEdges] = depthFirstSearch(neighbor);
+      verticesCount += subtreeVertices;
+      edgesCount += subtreeEdges;
+    }
+  });
+
+  return [verticesCount, edgesCount];
+};
+
+// Counts the number of complete components in the graph
+const countCompleteComponents = (n: number, edges: number[][]): number => {
+  buildGraph(n, edges);
+  let completeComponents = 0;
+
+  for (let i = 0; i < n; i++) {
+    if (!visited[i]) {
+      const [componentVertices, componentEdges] = depthFirstSearch(i);
+
+      // Checks if the connected component is a complete graph
+      // A complete graph with 'n' vertices has 'n*(n-1)/2' edges
+      if (componentVertices * (componentVertices - 1) / 2 === componentEdges) {
+        completeComponents++;
+      }
+    }
+  }
+
+  return completeComponents;
+};
+
+
+
+
+
+// Using an Object 
+// we can also pass an array like component = [ nodesCount,EdgeCount ] & manupulate it.
+
+
+var countCompleteComponents = function(n, edges) {
+    const adj = Array.from({ length: n }, () => []);
+    
+    // Build adjacency list
+    for (let [u, v] of edges) {
+        adj[u].push(v);
+        adj[v].push(u);
+    }
+
+    const visited = new Array(n).fill(false);
+    let count = 0;
+
+    function dfs(node, component) {
+        visited[node] = true;
+        component.nodes++;
+        component.edges += adj[node].length;
+
+        for (let neighbor of adj[node]) {
+            if (!visited[neighbor]) {
+                dfs(neighbor, component);
+            }
+        }
+    }
+
+    for (let i = 0; i < n; i++) {
+        if (!visited[i]) {
+            let component = { nodes: 0, edges: 0 };
+            dfs(i, component);
+
+            // Each edge counted twice in undirected graph
+            component.edges /= 2;
+
+            if (component.edges === (component.nodes * (component.nodes - 1)) / 2) {
+                count++;
+            }
+        }
+    }
+
+    return count;
+};
