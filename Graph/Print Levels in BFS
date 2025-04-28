@@ -1,0 +1,78 @@
+// BFS from given source s
+function bfsOfGraph(adj, s, visited, res) {
+    
+    // Create a queue for BFS
+    let q = [];
+    
+    // Mark source node as visited and enqueue it
+    visited[s] = true;
+    q.push(s);
+    
+    // Iterate over the queue
+    while (q.length > 0) {
+        
+      let level = [];
+      let levelSize = q.length;
+      
+      
+      for(let i=0; i< levelSize; i++) {
+        // Dequeue a vertex and store it
+        let curr = q.shift();
+        level.push(curr);
+        
+        // Get all adjacent vertices of the dequeued 
+        // vertex curr If an adjacent has not been 
+        // visited, mark it visited and enqueue it
+        for (let x of adj[curr]) {
+            if (!visited[x]) {
+                visited[x] = true;
+                q.push(x);
+            }
+        }
+    }
+      res.push(level);
+    }
+    return res;
+}
+ 
+// Perform BFS for the entire graph which maybe
+// disconnected
+function bfsDisconnected(adj) {
+    let V = adj.length;
+    
+    // create an array to store the traversal
+    let res = [];
+    
+    // Initially mark all the vertices as not visited
+    let visited = new Array(V).fill(false);
+    
+    // perform BFS for each node
+    for (let i = 0; i < V; i++) {
+        if (!visited[i]) {
+            bfsOfGraph(adj, i, visited, res);
+        }
+    }
+    return res;
+}
+ 
+// Main execution
+let adj =
+    [[1, 2], [0], [0],
+    [4], [3, 5], [4]];
+let ans = bfsDisconnected(adj);
+console.log(ans);
+
+for(let i=0; i < ans.length ; i++) console.log(ans[i]);
+
+// Output:- [ [ 0 ], [ 1, 2 ], [ 3 ], [ 4 ], [ 5 ] ]
+
+for(let x in ans) console.log(x);
+
+for(let x of ans) console.log(x);
+
+levels:- 
+[ 0 ]
+[ 1, 2 ]
+[ 3 ]
+[ 4 ]
+[ 5 ]
