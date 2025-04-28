@@ -99,3 +99,52 @@ var countCompleteComponents = function(n, edges) {
 
     return count;
 };
+
+
+
+// Approach Using BFS
+
+var countCompleteComponents = function(n, edges) {
+    const adj = Array.from({ length: n }, () => []);
+    
+    // Build adjacency list
+    for (let [u, v] of edges) {
+        adj[u].push(v);
+        adj[v].push(u);
+    }
+
+    let visited = new Array(n).fill(false);
+    let count = 0;
+
+    for (let i = 0; i < n; i++) {
+        if (!visited[i]) {
+            let queue = [i];
+            visited[i] = true;
+            let nodes = 0;
+            let edgeCount = 0;
+
+            while (queue.length > 0) {
+                let node = queue.shift();
+                nodes++;
+                edgeCount += adj[node].length;
+
+                for (let neighbor of adj[node]) {
+                    if (!visited[neighbor]) {
+                        visited[neighbor] = true;
+                        queue.push(neighbor);
+                    }
+                }
+            }
+
+            // Each edge is counted twice in undirected graph
+            edgeCount /= 2;
+
+            // Check if it's a complete component
+            if (edgeCount === (nodes * (nodes - 1)) / 2) {
+                count++;
+            }
+        }
+    }
+
+    return count;
+};
