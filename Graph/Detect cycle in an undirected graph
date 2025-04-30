@@ -1,0 +1,131 @@
+// DFS APPROACH 
+
+// Helper function to perform DFS and detect a cycle
+function hasCycleDFS(currentNode, adjacencyList, visitedNodes, parentNode) {
+    visitedNodes[currentNode] = true;
+
+    for (let neighbor of adjacencyList[currentNode]) {
+        if (!visitedNodes[neighbor]) {
+            if (hasCycleDFS(neighbor, adjacencyList, visitedNodes, currentNode)) {
+                return true;
+            }
+        } else if (neighbor !== parentNode) {
+            // A visited node that is not the parent indicates a cycle
+            return true;
+        }
+    }
+    return false;
+}
+
+// Function to construct adjacency list from edge list
+function buildAdjacencyList(totalVertices, edgeList) {
+    const adjacencyList = Array.from({ length: totalVertices }, () => []);
+    for (const [u, v] of edgeList) {
+        adjacencyList[u].push(v);
+        adjacencyList[v].push(u); // Because the graph is undirected
+    }
+    return adjacencyList;
+}
+
+// Main function to check if the undirected graph contains a cycle
+function containsCycle(totalVertices, edgeList) {
+    const adjacencyList = buildAdjacencyList(totalVertices, edgeList);
+    const visitedNodes = new Array(totalVertices).fill(false);
+
+    for (let vertex = 0; vertex < totalVertices; vertex++) {
+        if (!visitedNodes[vertex]) {
+            if (hasCycleDFS(vertex, adjacencyList, visitedNodes, -1)) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+// Example usage
+const numberOfVertices = 5;
+const graphEdges = [[0, 1], [0, 2], [0, 3], [1, 2], [3, 4]];
+
+console.log(containsCycle(numberOfVertices, graphEdges) ? "true" : "false");
+
+
+// BFS APPROACH 
+
+// Using Object 
+
+function buildAdjacencyList(totalVertices, edgeList) {
+    const adjacencyList = Array.from({ length: totalVertices }, () => []);
+    for (const [u, v] of edgeList) {
+        adjacencyList[u].push(v);
+        adjacencyList[v].push(u); // Undirected graph
+    }
+    return adjacencyList;
+}
+
+function containsCycleBFS(totalVertices, edgeList) {
+    const adjacencyList = buildAdjacencyList(totalVertices, edgeList);
+    const visited = new Array(totalVertices).fill(false);
+
+    for (let startNode = 0; startNode < totalVertices; startNode++) {
+        if (!visited[startNode]) {
+            if (bfsCycleCheck(startNode, adjacencyList, visited)) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+function bfsCycleCheck(startNode, adjacencyList, visited) {
+    const queue = [];
+    queue.push({ node: startNode, parent: -1 });
+    visited[startNode] = true;
+
+    while (queue.length > 0) {
+        const { node: currentNode, parent: parentNode } = queue.shift();
+
+        for (let neighbor of adjacencyList[currentNode]) {
+            if (!visited[neighbor]) {
+                visited[neighbor] = true;
+                queue.push({ node: neighbor, parent: currentNode });
+            } else if (neighbor !== parentNode) {
+                // Cycle detected
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+// Example usage
+const numberOfVertices = 5;
+const graphEdges = [[0, 1], [0, 2], [0, 3], [1, 2], [3, 4]];
+
+console.log(containsCycleBFS(numberOfVertices, graphEdges) ? "true" : "false");
+
+
+// Using Array 
+
+
+function bfsCycleCheck(startNode, adjacencyList, visited) {
+    const queue = [];
+    queue.push([startNode, -1]); // [node, parent]
+    visited[startNode] = true;
+
+    while (queue.length > 0) {
+        const [currentNode, parentNode] = queue.shift();
+
+        for (let neighbor of adjacencyList[currentNode]) {
+            if (!visited[neighbor]) {
+                visited[neighbor] = true;
+                queue.push([neighbor, currentNode]);
+            } else if (neighbor !== parentNode) {
+                // Cycle detected
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
