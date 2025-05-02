@@ -1,0 +1,18 @@
+function dfsMatrix(matrix, start, visited = []) {
+    const result = [];
+    const n = matrix.length;
+
+    const dfsHelper = (node) => {
+        visited[node] = true;
+        result.push(node);
+
+        for (let neighbor = 0; neighbor < n; neighbor++) {
+            if (matrix[node][neighbor] === 1 && !visited[neighbor]) {
+                dfsHelper(neighbor);
+            }
+        }
+    };
+
+    dfsHelper(start);
+    return result;
+}
