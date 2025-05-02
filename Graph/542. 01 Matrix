@@ -1,0 +1,58 @@
+
+// BFS - USING AN ANS ARRAY
+
+
+function updateMatrix(matrix: number[][]): number[][] {
+    // Dimension of the given matrix
+    const numRows: number = matrix.length;
+    const numCols: number = matrix[0].length;
+
+    // Initialize the answer matrix with -1,
+    // indicating that distances have not been calculated yet
+    const answerMatrix: number[][] = Array.from({ length: numRows }, () =>
+        Array(numCols).fill(-1));
+
+    // Queue to maintain the cells with value 0
+    const queue: [number, number][] = [];
+
+    // Populate the queue with all the cells that contain 0
+    // and update their distance in the answer matrix
+    for (let row = 0; row < numRows; ++row) {
+        for (let col = 0; col < numCols; ++col) {
+            if (matrix[row][col] === 0) {
+                queue.push([row, col]);
+                answerMatrix[row][col] = 0;
+            }
+        }
+    }
+
+    // Directions array to explore adjacent cells (up, right, down, left)
+    const directions: number[] = [-1, 0, 1, 0, -1];
+
+    // Process the queue and update each cell's distance from the nearest 0
+    while (queue.length > 0) {
+        const [currentRow, currentCol] = queue.shift()!;
+
+        // Explore the adjacent cells in 4 directions
+        for (let k = 0; k < 4; ++k) {
+            const nextRow = currentRow + directions[k];
+            const nextCol = currentCol + directions[k + 1];
+
+            // If the next cell is within bounds and its distance is not calculated
+            if (nextRow >= 0 && nextRow < numRows &&
+                nextCol >= 0 && nextCol < numCols &&
+                answerMatrix[nextRow][nextCol] === -1) {
+                // Update the distance and add the cell to the queue
+                answerMatrix[nextRow][nextCol] = answerMatrix[currentRow][currentCol] + 1;
+                queue.push([nextRow, nextCol]);
+            }
+        }
+    }
+
+    // Return the updated answer matrix
+    return answerMatrix;
+}
+
+
+// BFS - INPLACE CONVERSION
+
