@@ -1,0 +1,106 @@
+// BFS 
+
+function numEnclaves(grid) {
+    if (!grid || grid.length === 0) return 0;
+
+    const rows = grid.length;
+    const cols = grid[0].length;
+    const queue = [];
+
+    // Directions (up, down, left, right)
+    const directions = [[-1,0], [1,0], [0,-1], [0,1]];
+
+    // Add all boundary land cells to the queue and mark them visited (set to 0)
+    for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+            if ((r === 0 || r === rows - 1 || c === 0 || c === cols -1) && grid[r][c] === 1) {
+                queue.push([r, c]);
+                grid[r][c] = 0; // Mark visited
+            }
+        }
+    }
+
+    // BFS from boundary land cells
+    while (queue.length > 0) {
+        const [r, c] = queue.shift();
+
+        for (const [dr, dc] of directions) {
+            const nr = r + dr;
+            const nc = c + dc;
+
+            if (nr >= 0 && nr < rows && nc >= 0 && nc < cols && grid[nr][nc] === 1) {
+                queue.push([nr, nc]);
+                grid[nr][nc] = 0; // Mark visited
+            }
+        }
+    }
+
+    // Count remaining land cells (enclaves)
+    let count = 0;
+    for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+            if (grid[r][c] === 1) count++;
+        }
+    }
+
+    return count;
+}
+
+// Example usage:
+const grid = [
+    [0,0,0,0],
+    [1,0,1,0],
+    [0,1,1,0],
+    [0,0,0,0]
+];
+
+console.log(numEnclaves(grid));
+
+
+
+// DFS 
+
+
+function numEnclaves(grid) {
+    if (!grid || grid.length === 0) return 0;
+
+    const rows = grid.length;
+    const cols = grid[0].length;
+
+    // Directions for up, down, left, right
+    const directions = [[-1,0], [1,0], [0,-1], [0,1]];
+
+    // DFS function to mark connected land cells as visited (set to 0)
+    function dfs(r, c) {
+        if (r < 0 || r >= rows || c < 0 || c >= cols || grid[r][c] !== 1) return;
+
+        grid[r][c] = 0; // Mark visited
+
+        for (const [dr, dc] of directions) {
+            dfs(r + dr, c + dc);
+        }
+    }
+
+    // Mark all boundary connected lands using DFS
+    for (let r = 0; r < rows; r++) {
+        if (grid[r][0] === 1) dfs(r, 0);  // left boundary
+        if (grid[r][cols - 1] === 1) dfs(r, cols - 1);  // right boundary
+    }
+
+    for (let c = 0; c < cols; c++) {
+        if (grid[0][c] === 1) dfs(0, c); // top boundary
+        if (grid[rows - 1][c] === 1) dfs(rows - 1, c); // bottom boundary
+    }
+
+    // Count remaining land cells after removing boundary connected ones
+    let count = 0;
+    for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+            if (grid[r][c] === 1) count++;
+        }
+    }
+
+    return count;
+}
+
+
