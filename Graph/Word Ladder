@@ -1,0 +1,68 @@
+// JavaScript program to find length of the shortest
+// chain transformation from start to target
+
+function wordLadder(start, target, arr) {
+    
+    // set to keep track of unvisited words
+    let st = new Set(arr);
+
+    // store the current chain length
+    let res = 0;
+    let m = start.length;
+
+    // queue to store words to visit
+    let words = [];
+    words.push(start);
+
+    while (words.length > 0) {
+        ++res;
+        let len = words.length;
+
+        // iterate through all words at same level
+        for (let i = 0; i < len; ++i) {
+            let word = words.shift();
+
+            // For every character of the word
+            for (let j = 0; j < m; ++j) {
+                // Retain the original character
+                // at the current position
+                let wordArray = word.split('');
+                let ch = wordArray[j];
+
+                // Replace the current character with
+                // every possible lowercase alphabet
+                for (let c = 'a'.charCodeAt(0); c <= 'z'.charCodeAt(0); ++c) {
+                    wordArray[j] = String.fromCharCode(c);
+                    let newWord = wordArray.join('');
+
+                    // skip the word if already added
+                    // or not present in set
+                    if (!st.has(newWord))
+                        continue;
+
+                    // If target word is found
+                    if (newWord === target)
+                        return res + 1;
+
+                    // remove the word from set
+                    st.delete(newWord);
+
+                    // And push the newly generated word
+                    // which will be a part of the chain
+                    words.push(newWord);
+                }
+
+                // Restore the original character
+                // at the current position
+                wordArray[j] = ch;
+            }
+        }
+    }
+    return 0;
+}
+
+// Driver code
+let arr = ["poon", "plee", "same", "poie", "plie", "poin", "plea"];
+let start = "toon";
+let target = "plea";
+console.log(wordLadder(start, target, arr));
