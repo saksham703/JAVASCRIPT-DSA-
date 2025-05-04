@@ -1,0 +1,59 @@
+function kahnTopologicalSort(graph) {
+  const n = graph.length;
+  const inDegree = new Array(n).fill(0);
+
+  // Calculate in-degree (number of incoming edges) for each node
+  for (let u = 0; u < n; u++) {
+    for (const v of graph[u]) {
+      inDegree[v]++;
+    }
+  }
+
+  const queue = [];
+  // Enqueue all nodes with in-degree 0
+  for (let i = 0; i < n; i++) {
+    if (inDegree[i] === 0) {
+      queue.push(i);
+    }
+  }
+
+  const topoOrder = [];
+
+  while (queue.length > 0) {
+    const u = queue.shift();
+    topoOrder.push(u);
+
+    // Decrement in-degree of all neighbors of u
+    for (const v of graph[u]) {
+      inDegree[v]--;
+      if (inDegree[v] === 0) {
+        queue.push(v);
+      }
+    }
+  }
+
+  // Check if topological sort is possible (i.e. graph has no cycles)
+  if (topoOrder.length !== n) {
+    // Cycle detected; topological order not possible
+    return null;
+  }
+
+  return topoOrder;
+}
+
+// Example usage:
+// Graph represented as adjacency list: graph[node] = [list of neighbors]
+const graph = [
+  [1, 2], // edges from node 0 to 1 and 2
+  [3],    // edge from node 1 to 3
+  [3],    // edge from node 2 to 3
+  []      // node 3 has no outgoing edges
+];
+
+const topoSorted = kahnTopologicalSort(graph);
+
+if (topoSorted) {
+  console.log("Topological Order:", topoSorted); // Output: [0, 1, 2, 3] or [0, 2, 1, 3]
+} else {
+  console.log("Graph has a cycle; topological sort not possible.");
+}
