@@ -1,3 +1,5 @@
+// Topological sorting exists only for DAG
+
 // Function to perform DFS and topological sorting
 function topologicalSortUtil(v, adj, visited, st)
 {
