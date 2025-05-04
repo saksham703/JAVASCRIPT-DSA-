@@ -1,0 +1,48 @@
+function hasCycle(graph) {
+  const n = graph.length;
+  const visited = new Array(n).fill(false);
+  const pathVisited = new Array(n).fill(false);
+
+  function dfs(node) {
+    visited[node] = true;
+    pathVisited[node] = true;
+
+    for (const neighbor of graph[node]) {
+      if (!visited[neighbor]) {
+        if (dfs(neighbor)) {
+          return true;
+        }
+      }
+// If node is already visited & pathVisited is also true
+else if (pathVisited[neighbor]) {
+        return true;
+      }
+    }
+
+    pathVisited[node] = false; // Backtrack
+    return false;
+  }
+
+// for all disconnected graph components
+  for (let i = 0; i < n; i++) {
+    if (!visited[i]) {
+      if (dfs(i)) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
+
+// Example usage:
+// Graph represented as adjacency list
+const graph = [
+  [1],    // Node 0 -> Node 1
+  [2],    // Node 1 -> Node 2
+  [0],    // Node 2 -> Node 0 (cycle here)
+  [4],    // Node 3 -> Node 4
+  []      // Node 4 -> no edges
+];
+
+console.log(hasCycle(graph));  // Output: true
