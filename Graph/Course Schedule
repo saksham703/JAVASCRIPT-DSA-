@@ -48,4 +48,4 @@ console.log(canFinish(numCourses, prerequisites)); // Output: true
 
 // DFS - TOPOLOGICAL SORT 
 
-
+// check if togoSort.length === graph.length then return true else false;
