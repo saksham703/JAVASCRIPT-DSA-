@@ -1,0 +1,39 @@
+// problem is expecting to return topo sort.
+
+// BFS - TOPOLOGICAL SORT 
+
+var findOrder = function(numCourses, prerequisites) {
+    const graph = new Map();
+    const inDegree = new Array(numCourses).fill(0);
+    
+    // Build graph and compute in-degrees
+    for (let [course, prereq] of prerequisites) {
+        if (!graph.has(prereq)) graph.set(prereq, []);
+        graph.get(prereq).push(course);
+        inDegree[course]++;
+    }
+
+    const queue = [];
+    
+    // Start with courses that have no prerequisites
+    for (let i = 0; i < numCourses; i++) {
+        if (inDegree[i] === 0) queue.push(i);
+    }
+
+    const topoSort = [];
+
+    while (queue.length) {
+        const course = queue.shift();
+        topoSort.push(course);
+
+        const neighbors = graph.get(course) || [];
+        for (let neighbor of neighbors) {
+            inDegree[neighbor]--;
+            if (inDegree[neighbor] === 0) queue.push(neighbor);
+        }
+    }
+
+    return topoSort.length === numCourses ? topoSort : [];
+};
+
+
