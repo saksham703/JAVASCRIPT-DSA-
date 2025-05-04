@@ -46,3 +46,61 @@ const graph = [
 ];
 
 console.log(hasCycle(graph));  // Output: true
+
+
+
+
+// Using Topological Sort - DFS
+
+
+
+
+
+
+// Using Topological Sort - KHAN'S ALGORITHM - BFS
+
+
+function hasCycle(graph) {
+  const n = graph.length;
+  const inDegree = new Array(n).fill(0);
+
+  for (let u = 0; u < n; u++) {
+    for (const v of graph[u]) {
+      inDegree[v]++;
+    }
+  }
+
+  const queue = [];
+  for (let i = 0; i < n; i++) {
+    if (inDegree[i] === 0) {
+      queue.push(i);
+    }
+  }
+
+  let count = 0;
+
+  while (queue.length > 0) {
+    const u = queue.shift();
+    count++;   //  topoSort.push(u); 
+
+    for (const v of graph[u]) {
+      inDegree[v]--;
+      if (inDegree[v] === 0) {
+        queue.push(v);
+      }
+    }
+  }
+
+  // If count doesn’t match number of nodes, cycle exists
+  return count !== n;  // (or topoSort.length == n);
+}
+
+// Example usage:
+const graph = [
+  [1],     // 0 -> 1
+  [2],     // 1 -> 2
+  [0, 3],  // 2 -> 0 (cycle here) and 2 -> 3
+  []       // 3 -> no outgoing edges
+];
+
+console.log(hasCycle(graph)); // Output: true (because of cycle 0 -> 1 -> 2 -> 0)
