@@ -1,0 +1,51 @@
+// BFS - TOPOLOGICAL SORT - KAHN'S ALGORITHM 
+
+function canFinish(numCourses, prerequisites) {
+  const inDegree = new Array(numCourses).fill(0);
+  const graph = new Array(numCourses).fill(0).map(() => []);
+
+  // Build the graph and in-degree array
+  for (const [course, prereq] of prerequisites) {
+    graph[prereq].push(course);
+    inDegree[course]++;
+  }
+
+  const queue = [];
+
+  // Enqueue courses with no prerequisites
+  for (let i = 0; i < numCourses; i++) {
+    if (inDegree[i] === 0) {
+      queue.push(i);
+    }
+  }
+
+  let count = 0; // number of courses that can be finished
+
+  while (queue.length > 0) {
+    const course = queue.shift();
+    count++;
+
+    // Reduce in-degree of courses dependent on the current course
+    for (const nextCourse of graph[course]) {
+      inDegree[nextCourse]--;
+      if (inDegree[nextCourse] === 0) {
+        queue.push(nextCourse);
+      }
+    }
+  }
+
+  // If count matches numCourses, no cycle exists and all courses can be finished
+  return count === numCourses;
+}
+
+// Example usage:
+const numCourses = 4;
+const prerequisites = [[1,0],[2,1],[3,2]];
+
+console.log(canFinish(numCourses, prerequisites)); // Output: true
+
+
+
+// DFS - TOPOLOGICAL SORT 
+
+
