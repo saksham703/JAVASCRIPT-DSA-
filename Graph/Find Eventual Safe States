@@ -1,0 +1,38 @@
+// DFS APPROACHE
+
+var eventualSafeNodes = function(graph) {
+    const n = graph.length;
+    const visited = new Array(n).fill(false);
+    const pathVisited = new Array(n).fill(false);
+    const safe = new Array(n).fill(false);
+
+    function isSafeDfs(node) {
+        visited[node] = true;
+        pathVisited[node] = true;
+
+        for (let neighbor of graph[node]) {
+            if (!visited[neighbor]) {
+                if (!isSafeDfs(neighbor)) return false;
+            } else if (pathVisited[neighbor]) {
+                return false; // cycle detected
+            }
+        }
+
+        pathVisited[node] = false;
+        safe[node] = true;
+        return true;
+    }
+
+    for (let i = 0; i < n; i++) {
+        if (!visited[i]) {
+            isSafeDfs(i);
+        }
+    }
+
+    const result = [];
+    for (let i = 0; i < n; i++) {
+        if (safe[i]) result.push(i);
+    }
+
+    return result;
+};
