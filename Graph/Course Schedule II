@@ -1,21 +1,20 @@
 // problem is expecting to return topo sort.
 
-// BFS - TOPOLOGICAL SORT 
+// BFS - TOPOLOGICAL SORT - Kahn's Algorithm 
 
 var findOrder = function(numCourses, prerequisites) {
-    const graph = new Map();
+    const graph = new Array(numCourses).fill(0).map(() => []);
     const inDegree = new Array(numCourses).fill(0);
     
     // Build graph and compute in-degrees
     for (let [course, prereq] of prerequisites) {
-        if (!graph.has(prereq)) graph.set(prereq, []);
-        graph.get(prereq).push(course);
+        graph[prereq].push(course);
         inDegree[course]++;
     }
 
     const queue = [];
-    
-    // Start with courses that have no prerequisites
+
+    // Start with nodes having in-degree 0 (no prerequisites)
     for (let i = 0; i < numCourses; i++) {
         if (inDegree[i] === 0) queue.push(i);
     }
@@ -26,14 +25,57 @@ var findOrder = function(numCourses, prerequisites) {
         const course = queue.shift();
         topoSort.push(course);
 
-        const neighbors = graph.get(course) || [];
-        for (let neighbor of neighbors) {
+        for (let neighbor of graph[course]) {
             inDegree[neighbor]--;
-            if (inDegree[neighbor] === 0) queue.push(neighbor);
+            if (inDegree[neighbor] === 0) {
+                queue.push(neighbor);
+            }
         }
     }
 
     return topoSort.length === numCourses ? topoSort : [];
 };
 
+
+// DFS 
+
+
+
+var findOrder = function(numCourses, prerequisites) {
+    const adj = new Array(numCourses).fill(0).map(() => []);
+    
+    // Build adjacency list
+    for (let [course, prereq] of prerequisites) {
+        adj[prereq].push(course);
+    }
+
+    const visited = new Array(numCourses).fill(false);
+    const pathVisited = new Array(numCourses).fill(false);
+    const topoSort = [];
+
+    function isCycleDFS(u) {
+        visited[u] = true;
+        pathVisited[u] = true;
+
+        for (let v of adj[u]) {
+            if (!visited[v]) {
+                if (isCycleDFS(v)) return true;
+            } else if (pathVisited[v]) {
+                return true; // cycle detected
+            }
+        }
+
+        pathVisited[u] = false;
+        topoSort.push(u); // post-order for topo sort
+        return false;
+    }
+
+    for (let i = 0; i < numCourses; i++) {
+        if (!visited[i]) {
+            if (isCycleDFS(i)) return []; // cycle found
+        }
+    }
+
+    return topoSort.reverse(); // reverse to get correct order
+};
 
