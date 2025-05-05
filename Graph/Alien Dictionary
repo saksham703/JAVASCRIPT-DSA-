@@ -1,0 +1,62 @@
+function findOrder(dict, N, K) {
+    // Step 1: Build the adjacency list
+    const adj = new Array(K).fill(0).map(() => []);
+    
+    for (let i = 0; i < N - 1; i++) {
+        const s1 = dict[i];
+        const s2 = dict[i + 1];
+        const len = Math.min(s1.length, s2.length);
+
+        for (let ptr = 0; ptr < len; ptr++) {
+            if (s1[ptr] !== s2[ptr]) {
+                const u = s1.charCodeAt(ptr) - 'a'.charCodeAt(0);
+                const v = s2.charCodeAt(ptr) - 'a'.charCodeAt(0);
+                adj[u].push(v);
+                break;
+            }
+        }
+    }
+
+    // Step 2: Topological Sort (Kahn’s Algorithm)
+    const inDegree = new Array(K).fill(0);
+
+    for (let u = 0; u < K; u++) {
+        for (let v of adj[u]) {
+            inDegree[v]++;
+        }
+    }
+
+    const queue = [];
+    for (let i = 0; i < K; i++) {
+        if (inDegree[i] === 0) {
+            queue.push(i);
+        }
+    }
+
+    const topo = [];
+    while (queue.length > 0) {
+        const node = queue.shift();
+        topo.push(node);
+
+        for (let neighbor of adj[node]) {
+            inDegree[neighbor]--;
+            if (inDegree[neighbor] === 0) {
+                queue.push(neighbor);
+            }
+        }
+    }
+
+    // Step 3: Build the final result string
+    let ans = "";
+    for (let index of topo) {
+        ans += String.fromCharCode(index + 'a'.charCodeAt(0));
+    }
+
+    return ans;
+}
+
+// Example usage:
+const N = 5, K = 4;
+const dict = ["baa", "abcd", "abca", "cab", "cad"];
+const result = findOrder(dict, N, K);
+console.log(result); // Output: e.g., "bdac"
