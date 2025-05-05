@@ -54,56 +54,40 @@ console.log(canFinish(numCourses, prerequisites)); // Output: true
 // DFS - 3rd Approach 
 
 
-
-function canFinish(numCourses, prerequisites) {
-  const graph = new Array(numCourses).fill(0).map(() => []);
-  const visited = new Array(numCourses).fill(0); // 0: unvisited, 1: visiting, 2: visited
-  const topoSort = [];
-
-  // Build graph adjacency list
-  for (const [course, prereq] of prerequisites) {
-    graph[prereq].push(course);
-  }
-
-  // DFS function to detect cycles and build topo sort
-  function dfs(node) {
-    if (visited[node] === 1) {
-      // Cycle detected
-      return false;
-    }
-    if (visited[node] === 2) {
-      // Already visited - safe
-      return true;
+var canFinish = function(numCourses, prerequisites) {
+    // Create an adjacency list using an array
+    const adj = new Array(numCourses).fill(0).map(() => []);
+ // Replaces each 0 with a new empty array
+    
+    // Build the graph
+    for (let [course, prereq] of prerequisites) {
+        adj[prereq].push(course); // prereq -> course
     }
 
-    visited[node] = 1; // Mark node as visiting
+    const visited = new Array(numCourses).fill(false);
+    const pathVisited  = new Array(numCourses).fill(false);
 
-    for (const neighbor of graph[node]) {
-      if (!dfs(neighbor)) {
-        return false; // Cycle detected downstream
-      }
-    }
+    function isCycleDFS(u) {
+        visited[u] = true;
+        pathVisited[u] = true;
 
-    visited[node] = 2; // Mark node as visited/completed
-    topoSort.push(node); // Add to topo sort on recursion backtrack
-    return true;
-  }
+        for (let v of adj[u]) {
+            if (!visited[v]) {
+                if (isCycleDFS(v)) return true;
+            } else if (pathVisited[v]) {
+                return true; // if node is already visited & visited in the current path then return true;
+            }
+        }
 
-  for (let i = 0; i  numCourses; i++) {
-    if (visited[i] === 0) {
-      if (!dfs(i)) {
-        // Cycle detected - topological sort not possible
+        pathVisited[u] = false;
         return false;
-      }
     }
-  }
 
-  // After DFS, topoSort array contains all nodes if no cycle
-  return topoSort.length === numCourses;
-}
+    for (let i = 0; i < numCourses; i++) {
+        if (!visited[i]) {
+            if (isCycleDFS(i)) return false;
+        }
+    }
 
-// Example usage:
-const numCourses = 4;
-const prerequisites = [[1,0],[2,1],[3,2]];
-
-console.log(canFinish(numCourses, prerequisites)); // Output: true
+    return true;
+};
