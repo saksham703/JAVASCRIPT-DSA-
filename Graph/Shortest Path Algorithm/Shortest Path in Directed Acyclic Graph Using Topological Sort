@@ -1,3 +1,5 @@
+// Only works for DAG
+
 class DAGShortestPath {
   constructor(totalVertices) {
     this.totalVertices = totalVertices;
