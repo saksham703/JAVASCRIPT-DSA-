@@ -1,0 +1,51 @@
+class DAGShortestPath {
+  constructor(totalVertices) {
+    this.totalVertices = totalVertices;
+    this.graph = Array.from({ length: totalVertices }, () => []);
+  }
+
+  addEdge(source, destination, weight) {
+    this.graph[source].push([destination, weight]);
+  }
+
+  topologicalSort(node, visited, stack) {
+    visited[node] = true;
+
+    for (const [neighbourNode, _] of this.graph[node]) {
+      if (!visited[neighbourNode]) {
+        this.topologicalSort(neighbourNode, visited, stack);
+      }
+    }
+
+    stack.push(node);
+  }
+
+  findShortestPaths(startNode) {
+    const visited = new Array(this.totalVertices).fill(false);
+    const stack = [];
+
+    for (let node = 0; node < this.totalVertices; node++) {
+      if (!visited[node]) {
+        this.topologicalSort(node, visited, stack);
+      }
+    }
+
+    const distances = new Array(this.totalVertices).fill(Infinity);
+    distances[startNode] = 0;
+
+    while (stack.length > 0) {
+      const currentNode = stack.pop();
+
+      if (distances[currentNode] !== Infinity) {
+        for (const [neighbourNode, weight] of this.graph[currentNode]) {
+          const potentialDistance = distances[currentNode] + weight;
+          if (potentialDistance < distances[neighbourNode]) {
+            distances[neighbourNode] = potentialDistance;
+          }
+        }
+      }
+    }
+
+    return distances;
+  }
+}
