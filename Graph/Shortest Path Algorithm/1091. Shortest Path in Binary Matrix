@@ -1,0 +1,83 @@
+// Brute Force - Recursion (dfs)
+
+function shortestPathBinaryMatrix(grid) {
+    const n = grid.length;
+    if (grid[0][0] === 1 || grid[n - 1][n - 1] === 1) return -1;
+
+    const dirs = [
+        [1, 0], [0, 1], [1, 1], [-1, 0], [0, -1],
+        [-1, -1], [-1, 1], [1, -1]
+    ];
+
+    let minPath = Infinity;
+
+    const visited = Array.from({ length: n }, () => Array(n).fill(false));
+
+    function backtrack(x, y, pathLength) {
+        if (x < 0 || y < 0 || x >= n || y >= n || grid[x][y] === 1 || visited[x][y]) {
+            return;
+        }
+
+        // Reached destination
+        if (x === n - 1 && y === n - 1) {
+            minPath = Math.min(minPath, pathLength);
+            return;
+        }
+
+        visited[x][y] = true;
+
+        for (const [dx, dy] of dirs) {
+            backtrack(x + dx, y + dy, pathLength + 1);
+        }
+
+        visited[x][y] = false; // Backtrack
+    }
+
+    backtrack(0, 0, 1);
+
+    return minPath === Infinity ? -1 : minPath;
+}
+
+
+
+// TC:- O(8^(M*N)) dfs worst case (zig-zag) , SC:- O(N*M) , recursion stack + visited 
+
+
+
+// BFS
+
+
+function shortestPathBinaryMatrix(grid) {
+    const n = grid.length;
+    if (grid[0][0] === 1 || grid[n - 1][n - 1] === 1) return -1;
+
+    const dirs = [
+        [1, 0], [0, 1], [1, 1], [-1, 0], [0, -1],
+        [-1, -1], [-1, 1], [1, -1]
+    ];
+
+    const queue = [[0, 0, 1]]; // [x, y, pathLength]
+    const visited = Array.from({ length: n }, () => Array(n).fill(false));
+    visited[0][0] = true;
+
+    while (queue.length > 0) {
+        const [x, y, pathLength] = queue.shift();
+
+        // Reached destination
+        if (x === n - 1 && y === n - 1) {
+            return pathLength;
+        }
+
+        for (const [dx, dy] of dirs) {
+            const newX = x + dx;
+            const newY = y + dy;
+
+            if (newX >= 0 && newY >= 0 && newX < n && newY < n && grid[newX][newY] === 0 && !visited[newX][newY]) {
+                visited[newX][newY] = true;
+                queue.push([newX, newY, pathLength + 1]);
+            }
+        }
+    }
+
+    return -1; // No path found
+}
