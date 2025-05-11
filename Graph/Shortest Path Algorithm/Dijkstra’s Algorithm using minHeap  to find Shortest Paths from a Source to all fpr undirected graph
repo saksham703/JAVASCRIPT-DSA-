@@ -1,58 +1,20 @@
 
-class MinHeap {
+class PQ {
     constructor() {
-        this.heap = [];
+        this.data = [];
     }
 
-    push(val) {
-        this.heap.push(val);
-        this._heapifyUp(this.heap.length - 1);
+    push(item) {
+        this.data.push(item);
+        this.data.sort((a, b) => a[0] - b[0]); // Sort by distance
     }
 
     pop() {
-        if (this.size() === 0) return null;
-        if (this.size() === 1) return this.heap.pop();
-
-        const min = this.heap[0];
-        this.heap[0] = this.heap.pop();
-        this._heapifyDown(0);
-        return min;
+        return this.data.shift(); // Remove and return the item with the smallest distance
     }
 
     size() {
-        return this.heap.length;
-    }
-
-    _heapifyUp(index) {
-        while (index > 0) {
-            const parent = Math.floor((index - 1) / 2);
-            if (this.heap[parent][0] <= this.heap[index][0]) break;
-            [this.heap[parent], this.heap[index]] = [this.heap[index], 
-                                this.heap[parent]];
-            index = parent;
-        }
-    }
-
-    _heapifyDown(index) {
-        const n = this.heap.length;
-        while (true) {
-            let smallest = index;
-            const left = 2 * index + 1;
-            const right = 2 * index + 2;
-
-            if (left < n && this.heap[left][0] < this.heap[smallest][0]){
-                smallest = left;
-            }
-            
-            if (right < n && this.heap[right][0] < this.heap[smallest][0]){
-                smallest = right;
-            }
-
-            if (smallest === index) break;
-            [this.heap[smallest], this.heap[index]] = 
-                              [this.heap[index], this.heap[smallest]];
-            index = smallest;
-        }
+        return this.data.length;
     }
 }
 
@@ -70,14 +32,6 @@ function constructAdj(edges, V) {
     return adj;
 }
 
-
-
-
-
-
-
-
-
 // Returns shortest distances from src to all other vertices
 function dijkstra(V, edges, src) {
     
@@ -85,29 +39,29 @@ function dijkstra(V, edges, src) {
     const adj = constructAdj(edges, V);
 
     // Create a min heap to store <distance, node>
-    const minHeap = new MinHeap();
+    const pq = new PQ();
 
     // Create an array for distances and initialize all distances as infinity
-    const distance = Array(V).fill(Number.MAX_SAFE_INTEGER);
+    const dist = Array(V).fill(Infinity);
 
     // Push the source node with distance 0
-    minHeap.push([0, src]);
-    distance[src] = 0;
+     pq.push([0, src]);
+    dist[src] = 0;
 
     // Process the heap
-    while (minHeap.size() > 0) {
-        const [dist, node] = minHeap.pop();
+    while (pq.size() > 0) {
+        const [d, node] = pq.pop();
 
         // Traverse all adjacent of u
-        for (const [neighbour, weight] of adj[node]) {
-            if (distance[neighbour] > distance[node] + weight) {
-                distance[neighbour] = distance[node] + weight;
-                minHeap.push([distance[neighbour], neighbour]);
+        for (const [neighbour , weight] of adj[node]) {
+            if (dist[neighbour] > dist[node] + weight) {
+                dist[neighbour] = dist[node] + weight;
+                pq.push([dist[neighbour], neighbour]);
             }
         }
     }
 
-    return distance;
+    return dist;
 }
 
 // Driver code
@@ -115,9 +69,13 @@ const V = 5;
 const src = 0;
 
 // edge list format: [u, v, weight]
-const edges = [[0, 1, 4], [0, 2, 8], [1, 4, 6], [2, 3, 2], [3, 4, 10]];
+const edges = 0, 1, 4], [0, 2, 8], [1, 4, 6], [2, 3, 2], [3, 4, 10;
 
 const result = dijkstra(V, edges, src);
 
 // Print shortest distances in one line
 console.log(result.join(' '));
+
+
+// TC normally : O((V + E) log V) , SC : O(V)
+// In this cases : TC:- O((V + E) * n log n)
