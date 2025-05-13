@@ -1,0 +1,159 @@
+/**
+ * @param {number[][]} heights
+ * @return {number}
+ */
+
+class PriorityQueue2 {
+    constructor() {
+        // Initialize an empty heap for the priority queue
+        this.heap = [];
+    }
+
+    // Function to push a value into the priority queue
+    push(value) {
+        // Push the value and sort the heap based on the first element of each pair
+        this.heap.push(value);
+        this.heap.sort((a, b) => a[0] - b[0]);
+    }
+
+    // Function to pop the top element from the priority queue
+    pop() {
+        // Remove and return the first element from the heap
+        return this.heap.shift();
+    }
+
+    // Function to check if the priority queue is empty
+    isEmpty() {
+        // Return true if the heap is empty, false otherwise
+        return this.heap.length === 0;
+    }
+}
+
+
+var minimumEffortPath = function(heights) {
+    let arr = heights;
+    const N = arr.length;
+    const M = arr[0].length;
+
+    // Create a priority queue
+    const pq = new PriorityQueue2();
+
+    // Create a distance matrix with initially all cells marked as unvisited
+    const d = Array.from({ length: N }, () => Array(M).fill(1e9));
+    
+    // Distance for the source cell (0, 0) is 0
+    d[0][0] = 0;
+
+    // Push the source cell into the priority queue
+    pq.push([0, [0, 0]]);
+
+    // Array to traverse in all four directions
+    const dx = [-1, 0, 1, 0];
+    const dy = [0, 1, 0, -1];
+
+    // Iterate through the matrix by popping elements from the queue
+    // and pushing whenever a shorter distance to a cell is found
+    while (!pq.isEmpty()) {
+        const [diff, [r, c]] = pq.pop();
+
+        // Return the current value of difference (min) if we reach the destination
+        if (r === N - 1 && c === M - 1)
+            return diff;
+
+        for (let i = 0; i < 4; i++) {
+            const nx = dx[i] + r;
+            const ny = dy[i] + c;
+
+            // Checking the validity of the cell
+            if (nx >= 0 && nx < N && ny >= 0 && ny < M) {
+                // Effort can be calculated as the max value
+                // of differences between the values of the
+                // node and its adjacent nodes
+                const nf = Math.max(Math.abs(arr[r][c] - arr[nx][ny]), diff);
+
+                // If the calculated effort is less than the
+                // previous value, update it as we need the min effort
+                if (nf < d[nx][ny]) {
+                    d[nx][ny] = nf;
+                    pq.push([nf, [nx, ny]]);
+                }
+            }
+        }
+    }
+
+    // If unreachable
+    return -1;
+};
+
+
+
+
+// GIVES TLE ON LEETCODE, TC:- since we are traversing the graph using bfs so, O(N*M) for traversing all nodes
+for a single node TC of sorting is PQ is nlogn, therefore for all the nodes , TC is (N*M)log(N*M). There total TC is O(N*M)*(N*M)log(N*M), SC:-O(N*M);
+
+
+
+
+
+
+
+
+// APPROACH 2:- USING BINARY SEARCH + BFS
+
+
+var minimumEffortPath = function(heights) {
+    const rows = heights.length;
+    const cols = heights[0].length;
+    
+    const directions = [[0, 1], [1, 0], [-1, 0], [0, -1]];
+
+    const isValid = (x, y) => x >= 0 && y >= 0 && x < rows && y < cols;
+
+    const canReach = (maxEffort) => {
+        const queue = [[0, 0]];
+        const visited = Array.from({ length: rows }, () => Array(cols).fill(false));
+        visited[0][0] = true;
+
+        while (queue.length > 0) {
+            const [x, y] = queue.shift();
+
+            if (x === rows - 1 && y === cols - 1) return true;
+
+            for (const [dx, dy] of directions) {
+                const newX = x + dx;
+                const newY = y + dy;
+
+                if (
+                    isValid(newX, newY) &&
+                    !visited[newX][newY] &&
+                    Math.abs(heights[newX][newY] - heights[x][y]) <= maxEffort
+                ) {
+                    visited[newX][newY] = true;
+                    queue.push([newX, newY]);
+                }
+            }
+        }
+
+        return false;
+    };
+
+    let left = 0;
+    let right = 1e6;
+    let answer = 0;
+
+    while (left <= right) {
+        const mid = Math.floor((left + right) / 2);
+        if (canReach(mid)) {
+            answer = mid;
+            right = mid - 1;
+        } else {
+            left = mid + 1;
+        }
+    }
+
+    return answer;
+};
+
+
+
+// TC:- log(max_no)*O(N*M) = worst case scenario :-  log(10^6) * O(100*100) = 20*10^4 = 2*10^5 . SC:- O(N*M)
