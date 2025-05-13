@@ -1,0 +1,19 @@
+/**
+ * @param {number[]} nums
+ * @return {void} Do not return anything, modify nums in-place instead.
+ */
+var moveZeroes = function(nums) {
+    // Edge cases
+    if (nums.length === 0 || nums.length === 1) return;
+
+    let positionToFill = 0;
+
+    for (let i = 0; i < nums.length; i++) {
+        if (nums[i] !== 0) {
+            let temp = nums[i];
+            nums[i] = nums[positionToFill];
+            nums[positionToFill] = temp;
+            positionToFill++;
+        }
+    }
+};
