@@ -94,3 +94,68 @@ for a single node TC of sorting is PQ is nlogn, therefore for all the nodes , TC
 
 
 
+
+
+
+
+// APPROACH 2:- USING BINARY SEARCH + BFS
+
+
+var minimumEffortPath = function(heights) {
+    const rows = heights.length;
+    const cols = heights[0].length;
+    
+    const directions = [[0, 1], [1, 0], [-1, 0], [0, -1]];
+
+    const isValid = (x, y) => x >= 0 && y >= 0 && x < rows && y < cols;
+
+    const canReach = (maxEffort) => {
+        const queue = [[0, 0]];
+        const visited = Array.from({ length: rows }, () => Array(cols).fill(false));
+        visited[0][0] = true;
+
+        while (queue.length > 0) {
+            const [x, y] = queue.shift();
+
+            if (x === rows - 1 && y === cols - 1) return true;
+
+            for (const [dx, dy] of directions) {
+                const newX = x + dx;
+                const newY = y + dy;
+
+                if (
+                    isValid(newX, newY) &&
+                    !visited[newX][newY] &&
+                    Math.abs(heights[newX][newY] - heights[x][y]) <= maxEffort
+                ) {
+                    visited[newX][newY] = true;
+                    queue.push([newX, newY]);
+                }
+            }
+        }
+
+        return false;
+    };
+
+    let left = 0;
+    let right = 1e6;
+    let answer = 0;
+
+    while (left <= right) {
+        const mid = Math.floor((left + right) / 2);
+        if (canReach(mid)) {
+            answer = mid;
+            right = mid - 1;
+        } else {
+            left = mid + 1;
+        }
+    }
+
+    return answer;
+};
+
+
+
+// TC:- log(max_no)*O(N*M) = worst case scenario :-  log(10^6) * O(100*100) = 20*10^4 = 2*10^5 . SC:- O(N*M)
+
+
