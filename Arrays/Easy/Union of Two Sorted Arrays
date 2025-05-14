@@ -13,3 +13,64 @@ let c = [3, 5, 10, 10, 10, 15, 15, 20];
 let d = [5, 10, 10, 15, 30];
 
 console.log(unionOfSortedArrays(c, d)); // Output: [3, 5, 10, 15, 20, 30]
+
+// TC:- O(N+M)log(N+M) , SC:- O(N+M)
+
+
+// Optimized O(N+M) solution 
+
+function findUnionOfSortedArrays(a, b) {
+  const union = [];
+  let i = 0;
+  let j = 0;
+
+  while (i < a.length && j < b.length) {
+    if (a[i] < b[j]) {
+      if (union.length === 0 || union[union.length - 1] !== a[i]) {
+        union.push(a[i]);
+      }
+      i++;
+    } else if (a[i] > b[j]) {
+      if (union.length === 0 || union[union.length - 1] !== b[j]) {
+        union.push(b[j]);
+      }
+      j++;
+    } else { // a[i] === b[j]
+      if (union.length === 0 || union[union.length - 1] !== a[i]) {
+        union.push(a[i]);
+      }
+      i++;
+      j++;
+    }
+  }
+
+  // Add remaining elements from array 'a'
+  while (i < a.length) {
+    if (union.length === 0 || union[union.length - 1] !== a[i]) {
+      union.push(a[i]);
+    }
+    i++;
+  }
+
+  // Add remaining elements from array 'b'
+  while (j < b.length) {
+    if (union.length === 0 || union[union.length - 1] !== b[j]) {
+      union.push(b[j]);
+    }
+    j++;
+  }
+
+  return union;
+}
+
+// Example usage:
+const arr1 = [1, 1, 2, 2, 2, 4];
+const arr2 = [2, 2, 4, 4];
+const unionArray1 = findUnionOfSortedArrays(arr1, arr2);
+console.log(unionArray1); // Output: [1, 2, 4]
+
+const arr3 = [3, 5, 10, 10, 10, 15, 15, 20];
+const arr4 = [5, 10, 10, 15, 30];
+const unionArray2 = findUnionOfSortedArrays(arr3, arr4);
+console.log(unionArray2); // Output: [3, 5, 10, 15, 20, 30]
+
