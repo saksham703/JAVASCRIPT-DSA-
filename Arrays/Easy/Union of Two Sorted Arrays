@@ -1,0 +1,15 @@
+function unionOfSortedArrays(a, b) {
+    let unionSet = new Set([...a, ...b]); // Merging both arrays into a Set to remove duplicates
+    return Array.from(unionSet).sort((x, y) => x - y); // Converting Set back to sorted array
+}
+
+// Example usage:
+let a = [1, 1, 2, 2, 2, 4];
+let b = [2, 2, 4, 4];
+
+console.log(unionOfSortedArrays(a, b)); // Output: [1, 2, 4]
+
+let c = [3, 5, 10, 10, 10, 15, 15, 20];
+let d = [5, 10, 10, 15, 30];
+
+console.log(unionOfSortedArrays(c, d)); // Output: [3, 5, 10, 15, 20, 30]
