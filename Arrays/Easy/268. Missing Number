@@ -9,3 +9,31 @@ var missingNumber = function(nums) {
 
     return expectedSum - actualSum;
 };
+
+
+
+// Using XOR
+
+function missingNumber(nums) {
+    let n = nums.length;
+    let xorAll = 0;
+    let xorArray = 0;
+
+    // XOR all numbers from 0 to n
+    for (let i = 0; i <= n; i++) {
+        xorAll ^= i;
+    }
+
+    // XOR all numbers in the array
+    for (let num of nums) {
+        xorArray ^= num;
+    }
+
+    // The missing number is the XOR of the two results
+    return xorAll ^ xorArray;
+}
+
+// Example usage:
+const nums = [3, 0, 1];
+console.log(missingNumber(nums)); // Output: 2
+
