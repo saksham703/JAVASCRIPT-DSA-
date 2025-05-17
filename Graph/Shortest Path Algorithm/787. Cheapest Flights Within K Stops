@@ -1,0 +1,81 @@
+// Brute Force - Recursion & Backtracking 
+
+
+var findCheapestPrice = function(n, flights, src, dst, k) {
+    const graph = new Map();
+
+    // Build the adjacency list
+    for (let [u, v, w] of flights) {
+        if (!graph.has(u)) graph.set(u, []);
+        graph.get(u).push([v, w]);
+    }
+
+    let minCost = Infinity;
+
+    const dfs = (node, cost, stops, visited) => {
+        if (cost > minCost) return;
+        // If we found the destination after the last stop
+        if (node === dst) {
+            minCost = cost;
+            return;
+        }
+        // If we exceed the number of stops and destination is not found after last stop , we'll return 
+        if(stops > k) return;
+        
+        
+
+        if (!graph.has(node)) return;
+
+        for (let [neighbor, price] of graph.get(node)) {
+            if (!visited.has(neighbor)) {
+                visited.add(neighbor);
+                dfs(neighbor, cost + price, stops + 1, visited);
+                visited.delete(neighbor);
+            }
+        }
+    };
+
+    dfs(src, 0, 0, new Set([src]));
+    return minCost === Infinity ? -1 : minCost;
+};
+
+
+// TC:- O(n^k+1)
+
+
+
+var findCheapestPrice = function(n, flights, src, dst, k) {
+    const graph = new Map();
+
+    for (const [u, v, w] of flights) {
+        if (!graph.has(u)) graph.set(u, []);
+        graph.get(u).push([v, w]);
+    }
+
+    const pq = [[0, src, 0]]; // [cost, city, stops]
+    const visited = Array.from({ length: n }, () => Array(k + 1).fill(Infinity));
+    visited[src][0] = 0;
+
+    while (pq.length > 0) {
+        const [cost, city, stops] = pq.shift();
+
+        if (city === dst) return cost;
+        if (stops > k) continue;
+
+        for (const [neighbour, price] of graph.get(city) || []) {
+            const newCost = cost + price;
+            if (stops <= k && newCost < visited[neighbour][stops]) {
+                visited[neighbour][stops] = newCost;
+                pq.push([newCost, neighbour, stops + 1]);
+            }
+        }
+
+        pq.sort((a, b) => a[0] - b[0]); // optional
+    }
+
+    return -1;
+};
+
+
+
+// TC:- O( (n * k) log(n * k))
