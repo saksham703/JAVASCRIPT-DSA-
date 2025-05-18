@@ -67,6 +67,7 @@ function networkDelayTime(times, n, k) {
 // BFS with PQ
 
 
+
 function networkDelayTime(times, n, k) {
     const graph = new Map();
     for (const [u, v, w] of times) {
@@ -77,18 +78,18 @@ function networkDelayTime(times, n, k) {
     const dist = Array(n + 1).fill(Infinity);
     dist[k] = 0;
 
-    const minHeap = new MinPriorityQueue({ priority: x => x[1] });
-    minHeap.enqueue([k, 0]);
+    const pq = new MinPriorityQueue();
+    pq.enqueue([k, 0]);
 
-    while (!minHeap.isEmpty()) {
-        const [node, d] = minHeap.dequeue().element;
+    while (!pq.isEmpty()) {
+        const [node, d] = pq.dequeue();
 
         if (!graph.has(node)) continue;
 
         for (const [nei, w] of graph.get(node)) {
             if (d + w < dist[nei]) {
                 dist[nei] = d + w;
-                minHeap.enqueue([nei, dist[nei]]);
+                pq.enqueue([nei, dist[nei]]);
             }
         }
     }
@@ -96,3 +97,6 @@ function networkDelayTime(times, n, k) {
     let max = Math.max(...dist.slice(1));
     return max === Infinity ? -1 : max;
 }
+
+
+// TC:- O(ElogV)
