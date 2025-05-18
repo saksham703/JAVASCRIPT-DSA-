@@ -1,0 +1,96 @@
+// DFS APPROACH
+
+function networkDelayTime(times, n, k) {
+    const graph = new Map();
+    for (const [u, v, w] of times) {
+        if (!graph.has(u)) graph.set(u, []);
+        graph.get(u).push([v, w]);
+    }
+
+    const dist = Array(n + 1).fill(Infinity);
+    dist[k] = 0;
+
+    function dfs(node) {
+        if (!graph.has(node)) return;
+        for (const [nei, w] of graph.get(node)) {
+            if (dist[node] + w < dist[nei]) {
+                dist[nei] = dist[node] + w;
+                dfs(nei);
+            }
+        }
+    }
+
+    dfs(k);
+
+    let max = Math.max(...dist.slice(1));
+    return max === Infinity ? -1 : max;
+}
+
+
+
+// BFS APPROACH - SIMPLE QUEUE
+
+
+function networkDelayTime(times, n, k) {
+    const graph = new Map();
+    for (const [u, v, w] of times) {
+        if (!graph.has(u)) graph.set(u, []);
+        graph.get(u).push([v, w]);
+    }
+
+    const dist = Array(n + 1).fill(Infinity);
+    dist[k] = 0;
+
+    const queue = [[k, 0]];
+
+    while (queue.length) {
+        const [node, d] = queue.shift();
+
+        if (!graph.has(node)) continue;
+
+        for (const [nei, w] of graph.get(node)) {
+            if (dist[node] + w < dist[nei]) {
+                dist[nei] = dist[node] + w;
+                queue.push([nei, dist[nei]]);
+            }
+        }
+    }
+
+    let max = Math.max(...dist.slice(1));
+    return max === Infinity ? -1 : max;
+}
+
+
+
+// BFS with PQ
+
+
+function networkDelayTime(times, n, k) {
+    const graph = new Map();
+    for (const [u, v, w] of times) {
+        if (!graph.has(u)) graph.set(u, []);
+        graph.get(u).push([v, w]);
+    }
+
+    const dist = Array(n + 1).fill(Infinity);
+    dist[k] = 0;
+
+    const minHeap = new MinPriorityQueue({ priority: x => x[1] });
+    minHeap.enqueue([k, 0]);
+
+    while (!minHeap.isEmpty()) {
+        const [node, d] = minHeap.dequeue().element;
+
+        if (!graph.has(node)) continue;
+
+        for (const [nei, w] of graph.get(node)) {
+            if (d + w < dist[nei]) {
+                dist[nei] = d + w;
+                minHeap.enqueue([nei, dist[nei]]);
+            }
+        }
+    }
+
+    let max = Math.max(...dist.slice(1));
+    return max === Infinity ? -1 : max;
+}
