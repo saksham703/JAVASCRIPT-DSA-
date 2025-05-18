@@ -26,6 +26,8 @@ function networkDelayTime(times, n, k) {
     return max === Infinity ? -1 : max;
 }
 
+// TC:- O(N*E), each node can be visited & updated E number of times.
+// SC:- O(N+E) for graph creation,O(N) for dfs stack , O(N) for dist array
 
 
 // BFS APPROACH - SIMPLE QUEUE
@@ -60,7 +62,7 @@ function networkDelayTime(times, n, k) {
     return max === Infinity ? -1 : max;
 }
 
-
+// TC:- O(N*E)
 
 // BFS with PQ
 
