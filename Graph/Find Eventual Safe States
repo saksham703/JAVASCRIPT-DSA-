@@ -13,7 +13,7 @@ var eventualSafeNodes = function(graph) {
         for (let neighbor of graph[node]) {
             if (!visited[neighbor]) {
                 if (!isSafeDfs(neighbor)) return false;
-            } else if (pathVisited[neighbor]) {
+            } else if (visited[neighbour] && pathVisited[neighbor]) {
                 return false; // cycle detected
             }
         }
